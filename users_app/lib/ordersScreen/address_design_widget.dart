@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:users_app/ratingScreen/rate_seller_screen.dart';
 import 'package:users_app/splashScreen/my_splash_screen.dart';
 
 import '../models/address.dart';
@@ -117,6 +118,8 @@ class AddressDesign extends StatelessWidget {
                   builder: (context) => const MySplashScreen()));
             } else if (orderStatus == 'ended') {
               // implement Rate this seller
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => RateSellerScreen(sellerId: sellerId!)));
             } else {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const MySplashScreen()));

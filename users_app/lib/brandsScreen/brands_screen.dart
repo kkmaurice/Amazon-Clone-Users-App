@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:users_app/widgets/text_delegate_header_widget.dart';
 
-import '../global/global.dart';
 import '../models/brands.dart';
 import '../models/sellers.dart';
 import '../widgets/my_drawer.dart';
@@ -76,7 +75,7 @@ class _HomeScreenState extends State<BrandsScreen>
                 //display brands
                 return SliverStaggeredGrid.countBuilder(
                     crossAxisCount: 1,
-                    staggeredTileBuilder: (c)=> const StaggeredTile.fit(1),
+                    staggeredTileBuilder: (c) => const StaggeredTile.fit(1),
                     itemBuilder: (context, index)
                     {
                       Brands brandsModel = Brands.fromDocument(

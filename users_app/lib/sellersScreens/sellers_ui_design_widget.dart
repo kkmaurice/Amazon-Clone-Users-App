@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:users_app/brandsScreen/brands_screen.dart';
-import 'package:users_app/brandsScreen/brands_ui_design_widget.dart';
 import 'package:users_app/models/sellers.dart';
 
 class SellersUIDesignWidget extends StatefulWidget {
@@ -19,7 +16,10 @@ class _SellersUIDesignWidgetState extends State<SellersUIDesignWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => BrandsScreen(model: widget.model)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BrandsScreen(model: widget.model)));
       },
       child: Card(
         color: Colors.black54,
@@ -52,20 +52,22 @@ class _SellersUIDesignWidgetState extends State<SellersUIDesignWidget> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                // SmoothStarRating(
-                //     //allowHalfRating: true,
-                //     // onRatingChanged: (v) {
-                //     //   rating = v;
-                //     //   setState(() {});
-                //     // },
-                //     starCount: 5,
-                //     rating: widget.model.rating == null ? 0.0 : double.parse(widget.model.rating),
-                //     size: 25.0,
-                //     //filledIconData: Icons.blur_off,
-                //     //halfFilledIconData: Icons.blur_on,
-                //     color: Colors.pinkAccent,
-                //     borderColor: Colors.pinkAccent,
-                //     spacing: 0.0)
+                SmoothStarRating(
+                    allowHalfRating: true,
+                    // onRatingChanged: (v) {
+                    //   rating = v;
+                    //   setState(() {});
+                    // },
+                    starCount: 5,
+                    rating: widget.model.rating == null
+                        ? 0.0
+                        :4, //double.parse(widget.model.rating),
+                    size: 25.0,
+                    //filledIconData: Icons.blur_off,
+                    //halfFilledIconData: Icons.blur_on,
+                    color: Colors.pinkAccent,
+                    borderColor: Colors.pinkAccent,
+                    spacing: 0.0)
               ],
             ),
           ),

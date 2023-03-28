@@ -4,8 +4,7 @@ import '../assistantMethods/cart_methods.dart';
 
 SharedPreferences? sharedPreferences;
 
-final itemsImagesList =
-[
+final itemsImagesList = [
   "assets/images/slider/0.jpg",
   "assets/images/slider/1.jpg",
   "assets/images/slider/2.jpg",
@@ -23,3 +22,5 @@ final itemsImagesList =
 ];
 
 CartMethods cartMethods = CartMethods();
+double countStarRating = 0.0;
+String titleStarRating = '';
