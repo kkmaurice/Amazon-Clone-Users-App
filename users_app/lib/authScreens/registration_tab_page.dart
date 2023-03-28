@@ -14,8 +14,6 @@ import 'package:users_app/splashScreen/my_splash_screen.dart';
 import 'package:users_app/widgets/custom_text_field.dart';
 import 'package:users_app/widgets/loading_dialog.dart';
 
-import '../sellersScreens/home_screen.dart';
-
 class RegistrationTabPage extends StatefulWidget {
   const RegistrationTabPage({super.key});
 
@@ -50,104 +48,107 @@ class _LoginTabPageState extends State<RegistrationTabPage> {
     });
   }
 
-  formValidation() async
-  {
-    if(imageFile == null) //image is not selected
+  formValidation() async {
+    if (imageFile == null) //image is not selected
     {
       Fluttertoast.showToast(msg: "Please select an image.");
-    }
-    else //image is already selected
+    } else //image is already selected
     {
       //password is equal to confirm password
-      if(passwordTextEditingController.text == confirmPasswordTextEditingController.text)
-      {
+      if (passwordTextEditingController.text ==
+          confirmPasswordTextEditingController.text) {
         //check email, pass, confirm password & name text fields
-        if(nameTextEditingController.text.isNotEmpty
-            && emailTextEditingController.text.isNotEmpty
-            && passwordTextEditingController.text.isNotEmpty
-            && confirmPasswordTextEditingController.text.isNotEmpty)
-        {
+        if (nameTextEditingController.text.isNotEmpty &&
+            emailTextEditingController.text.isNotEmpty &&
+            passwordTextEditingController.text.isNotEmpty &&
+            confirmPasswordTextEditingController.text.isNotEmpty) {
           showDialog(
-            context: context, 
-            builder: (context) => LoadingDialog(message: "Registering your account!!\n",)
-            );
+              context: context,
+              builder: (context) => LoadingDialog(
+                    message: "Registering your account!!\n",
+                  ));
 
           //1.upload image to storage
           String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          final storageRef = FirebaseStorage.instance.ref().child("usersImages").child(fileName);
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child("usersImages")
+              .child(fileName);
           final uploadTask = storageRef.putFile(File(imageFile!.path));
           downloadUrl = await (await uploadTask).ref.getDownloadURL();
 
           //2. save the user info to firestore database
-            saveInformationToDatabase();
-          
-        }
-        else
-        {
+          saveInformationToDatabase();
+        } else {
           Navigator.pop(context);
-          Fluttertoast.showToast(msg: "Please complete the form. Do not leave any text field empty.");
+          Fluttertoast.showToast(
+              msg:
+                  "Please complete the form. Do not leave any text field empty.");
         }
-      }
-      else //password is NOT equal to confirm password
+      } else //password is NOT equal to confirm password
       {
-        Fluttertoast.showToast(msg: "Password and Confirm Password do not match.");
+        Fluttertoast.showToast(
+            msg: "Password and Confirm Password do not match.");
       }
     }
   }
 
-  saveInformationToDatabase() async
-  {
+  saveInformationToDatabase() async {
     //authenticate the user first
     User? currentUser;
 
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailTextEditingController.text.trim(),
-        password: passwordTextEditingController.text.trim(),
-    ).then((auth)
-    {
+    await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+      email: emailTextEditingController.text.trim(),
+      password: passwordTextEditingController.text.trim(),
+    )
+        .then((auth) {
       currentUser = auth.user;
-    }).catchError((errorMessage)
-    {
+    }).catchError((errorMessage) {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "Error Occurred: \n $errorMessage");
     });
 
-    if(currentUser != null)
-    {
+    if (currentUser != null) {
       //save info to database and save locally
       saveInfoToFirestoreAndLocally(currentUser!);
     }
   }
 
+  saveInfoToFirestoreAndLocally(User currentUser) async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(currentUser.uid)
+        .set({
+      "uid": currentUser.uid,
+      "name": nameTextEditingController.text,
+      "email": emailTextEditingController.text,
+      "password": passwordTextEditingController.text,
+      "photoUrl": downloadUrl,
+      "status": 'approved',
+      "userCart": [],
+      "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
+    }).then((value) {
+      Fluttertoast.showToast(msg: "User has been registered successfully.");
+      //Navigator.pushNamedAndRemoveUntil(context, HomeScreen.idScreen, (route) => false);
+    }).catchError((error) {
+      Fluttertoast.showToast(msg: error.toString());
+    });
 
-  saveInfoToFirestoreAndLocally(User currentUser) async{
-    await FirebaseFirestore.instance.collection("users").doc(currentUser.uid).set({
-        "uid": currentUser.uid,
-        "name": nameTextEditingController.text,
-        "email": emailTextEditingController.text,
-        "password": passwordTextEditingController.text,
-        "photoUrl": downloadUrl,
-        "status": 'approved',
-        "userCart": [],
-        "createdAt": DateTime.now().millisecondsSinceEpoch.toString(),
-      }).then((value) {
-        Fluttertoast.showToast(msg: "User has been registered successfully.");
-        //Navigator.pushNamedAndRemoveUntil(context, HomeScreen.idScreen, (route) => false);
-      }).catchError((error) {
-        Fluttertoast.showToast(msg: error.toString());
-      });
+    // save user info to shared preferences/local storage
+    sharedPreferences = await SharedPreferences.getInstance();
+    await sharedPreferences!.setString("uid", currentUser.uid);
+    await sharedPreferences!.setString("name", nameTextEditingController.text);
+    await sharedPreferences!
+        .setString("email", emailTextEditingController.text);
+    await sharedPreferences!.setString("photoUrl", downloadUrl);
+    await sharedPreferences!.setStringList("userCart", []);
+    await sharedPreferences!.setString(
+        "createdAt", DateTime.now().millisecondsSinceEpoch.toString());
 
-      // save user info to shared preferences/local storage
-        sharedPreferences = await SharedPreferences.getInstance();
-        await sharedPreferences!.setString("uid", currentUser.uid);
-        await sharedPreferences!.setString("name", nameTextEditingController.text);
-        await sharedPreferences!.setString("email", emailTextEditingController.text);
-        await sharedPreferences!.setString("photoUrl", downloadUrl);
-        await sharedPreferences!.setStringList("userCart", []);
-        await sharedPreferences!.setString("createdAt", DateTime.now().millisecondsSinceEpoch.toString());
-
-        //navigate to home screen
-        Navigator.push(context, MaterialPageRoute(builder: (c)=> const MySplashScreen()));
+    //navigate to home screen
+    Navigator.push(
+        context, MaterialPageRoute(builder: (c) => const MySplashScreen()));
   }
 
   @override
@@ -168,11 +169,13 @@ class _LoginTabPageState extends State<RegistrationTabPage> {
                 backgroundColor: Colors.white,
                 backgroundImage:
                     imageFile == null ? null : FileImage(File(imageFile!.path)),
-                child: imageFile==null? Icon(
-                  Icons.add_photo_alternate,
-                  color: Colors.grey,
-                  size: MediaQuery.of(context).size.width * 0.2,
-                ):null,
+                child: imageFile == null
+                    ? Icon(
+                        Icons.add_photo_alternate,
+                        color: Colors.grey,
+                        size: MediaQuery.of(context).size.width * 0.2,
+                      )
+                    : null,
               ),
             ),
             const SizedBox(

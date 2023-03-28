@@ -14,11 +14,11 @@ class Sellers {
 
   factory Sellers.fromMap(Map<String, dynamic> data) {
     return Sellers(
-      name: data['name'],
-      email: data['email'],
-      photoUrl: data['photoUrl'],
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      photoUrl: data['photoUrl'] ?? '',
       uid: data['uid'],
-      rating: data['rating'],
+      rating: data['rating']?? '',
     );
   }
 }

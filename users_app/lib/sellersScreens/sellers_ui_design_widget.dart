@@ -52,20 +52,20 @@ class _SellersUIDesignWidgetState extends State<SellersUIDesignWidget> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SmoothStarRating(
-                    //allowHalfRating: true,
-                    // onRatingChanged: (v) {
-                    //   rating = v;
-                    //   setState(() {});
-                    // },
-                    starCount: 5,
-                    rating: widget.model.rating == null ? 0.0 : double.parse(widget.model.rating),
-                    size: 25.0,
-                    //filledIconData: Icons.blur_off,
-                    //halfFilledIconData: Icons.blur_on,
-                    color: Colors.pinkAccent,
-                    borderColor: Colors.pinkAccent,
-                    spacing: 0.0)
+                // SmoothStarRating(
+                //     //allowHalfRating: true,
+                //     // onRatingChanged: (v) {
+                //     //   rating = v;
+                //     //   setState(() {});
+                //     // },
+                //     starCount: 5,
+                //     rating: widget.model.rating == null ? 0.0 : double.parse(widget.model.rating),
+                //     size: 25.0,
+                //     //filledIconData: Icons.blur_off,
+                //     //halfFilledIconData: Icons.blur_on,
+                //     color: Colors.pinkAccent,
+                //     borderColor: Colors.pinkAccent,
+                //     spacing: 0.0)
               ],
             ),
           ),
