@@ -1,12 +1,8 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:intl/intl.dart';
-import 'package:users_app/addressScreens/address_design_widget.dart';
 import 'package:users_app/global/global.dart';
 import 'package:users_app/models/address.dart';
 import 'package:users_app/ordersScreen/address_design_widget.dart';
