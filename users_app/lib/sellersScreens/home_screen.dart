@@ -7,6 +7,8 @@ import 'package:users_app/models/sellers.dart';
 import 'package:users_app/sellersScreens/sellers_ui_design_widget.dart';
 import 'package:users_app/widgets/my_drawer.dart';
 
+import '../push_notification/push_notifications_system.dart';
+
 
 class HomeScreen extends StatefulWidget
 {
@@ -16,12 +18,20 @@ class HomeScreen extends StatefulWidget
 
 class _HomeScreenState extends State<HomeScreen>
 {
+
+  @override
+  void initState() {
+    PushNotificationSystem pushNotificationsSystem = PushNotificationSystem();
+    pushNotificationsSystem.whenNotificationReceived(context);
+    pushNotificationsSystem.registrationToken();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context)
   {
     return Scaffold(
       backgroundColor: Colors.black,
-      drawer: MyDrawer(),
+      drawer: const MyDrawer(),
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: const BoxDecoration(

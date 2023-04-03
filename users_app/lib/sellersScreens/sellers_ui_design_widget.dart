@@ -61,7 +61,7 @@ class _SellersUIDesignWidgetState extends State<SellersUIDesignWidget> {
                     starCount: 5,
                     rating: widget.model.rating == null
                         ? 0.0
-                        :4, //double.parse(widget.model.rating),
+                        : 2, //double.parse(widget.model.rating),
                     size: 25.0,
                     //filledIconData: Icons.blur_off,
                     //halfFilledIconData: Icons.blur_on,

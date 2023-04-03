@@ -1,12 +1,16 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart';
 import 'package:users_app/ratingScreen/rate_seller_screen.dart';
 import 'package:users_app/splashScreen/my_splash_screen.dart';
 
+import '../global/global.dart';
 import '../models/address.dart';
 
 class AddressDesign extends StatelessWidget {
@@ -23,6 +27,52 @@ class AddressDesign extends StatelessWidget {
     this.sellerId,
     this.orderByUser,
   }) : super(key: key);
+
+
+  sendNotificationToSeller(sellerUID, orderId) async {
+    String deviceToken = '';
+    await FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sellerUID)
+        .get()
+        .then((value) {
+      if (value.data()!['deviceToken'] != null) {
+        deviceToken = value.data()!['deviceToken'];
+      }
+    });
+    notificationFormat(
+        deviceToken, orderId, sharedPreferences!.getString("name"));
+  }
+
+  notificationFormat(sellerDeviceToken, orderID, userName) {
+    Map<String, String> headerNotification = {
+      'Content-Type': 'application/json',
+      'Authorization': fcmServerToken
+    };
+
+    Map bodyNotification = {
+      'body':
+          'Dear Seller, Parcel (# $orderId) has received successfully by user $userName. \nPleas check now',
+      'title': 'Parcel Received By User',
+    };
+
+    Map dataMap = {
+      'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      'id': '1',
+      'status': 'done',
+      'userOrderId': orderId,
+    };
+
+    Map officialNotification = {
+      'notification': bodyNotification,
+      'priority': 'high',
+      'data': dataMap,
+      'to': sellerDeviceToken
+    };
+
+    post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+        headers: headerNotification, body: jsonEncode(officialNotification));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +162,7 @@ class AddressDesign extends StatelessWidget {
                           .doc(orderId)
                           .update({'status': 'ended'}));
               // Send notification to the seller that the order has been received
+              sendNotificationToSeller(sellerId!, orderId);
 
               Fluttertoast.showToast(msg: 'Confirmed Successfully');
               Navigator.of(context).push(MaterialPageRoute(
