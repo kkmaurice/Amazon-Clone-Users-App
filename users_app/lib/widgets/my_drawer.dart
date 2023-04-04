@@ -4,6 +4,7 @@ import 'package:users_app/global/global.dart';
 import 'package:users_app/history/history_screen.dart';
 import 'package:users_app/notYetReceivedParcels/not_yet_received_parcels_screen.dart';
 import 'package:users_app/ordersScreen/orders_screen.dart';
+import 'package:users_app/searchScreen/search_screen.dart';
 import 'package:users_app/splashScreen/my_splash_screen.dart';
 
 import '../sellersScreens/home_screen.dart';
@@ -189,7 +190,10 @@ class MyDrawer extends StatelessWidget {
                     fontSize: 18.0,
                   ),
                 ),
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const SearchScreen()));
+                },
               ),
               const Divider(
                 color: Colors.grey,
